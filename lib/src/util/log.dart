@@ -1,14 +1,14 @@
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart' hide AnsiColor;
+import 'package:stacktrace_impl/stacktrace_impl.dart';
 
 import 'ansi_color.dart';
 import 'enum_helper.dart';
-import 'stack_trace_impl.dart';
 
 /// Logging class
 class Log extends Logger {
-  static Log _self;
-  static String _localPath;
+  static late Log _self = Log._internal('.');
+  static late final String _localPath;
 
   /// The default log level.
   static Level loggingLevel = Level.info;
@@ -17,39 +17,39 @@ class Log extends Logger {
       : super(printer: MyLogPrinter(currentWorkingDirectory));
 
   ///
-  void debug(String message, {dynamic error, StackTrace stackTrace}) {
+  void debug(String message, {dynamic error, StackTrace? stackTrace}) {
     autoInit();
     Log.d(message, error: error, stackTrace: stackTrace);
   }
 
   ///
-  void info(String message, {dynamic error, StackTrace stackTrace}) {
+  void info(String message, {dynamic error, StackTrace? stackTrace}) {
     autoInit();
     Log.i(message, error: error, stackTrace: stackTrace);
   }
 
   ///
-  void warn(String message, {dynamic error, StackTrace stackTrace}) {
+  void warn(String message, {dynamic error, StackTrace? stackTrace}) {
     autoInit();
     Log.w(message, error: error, stackTrace: stackTrace);
   }
 
   ///
-  void error(String message, {dynamic error, StackTrace stackTrace}) {
+  void error(String message, {dynamic error, StackTrace? stackTrace}) {
     autoInit();
     Log.e(message, error: error, stackTrace: stackTrace);
   }
 
   ///
   void color(String message, AnsiColor color,
-      {dynamic error, StackTrace stackTrace}) {
+      {dynamic error, StackTrace? stackTrace}) {
     autoInit();
     Log.i(color.apply(message), error: error, stackTrace: stackTrace);
   }
 
   ///
   factory Log.color(String message, AnsiColor color,
-      {dynamic error, StackTrace stackTrace}) {
+      {dynamic error, StackTrace? stackTrace}) {
     autoInit();
     _self.d(color.apply(message), error, stackTrace);
     return _self;
@@ -59,7 +59,7 @@ class Log extends Logger {
 
   ///
   factory Log.d(String message,
-      {dynamic error, StackTrace stackTrace, bool supressDuplicates = false}) {
+      {dynamic error, StackTrace? stackTrace, bool supressDuplicates = false}) {
     autoInit();
     var suppress = false;
 
@@ -76,32 +76,28 @@ class Log extends Logger {
   }
 
   ///
-  factory Log.i(String message, {dynamic error, StackTrace stackTrace}) {
+  factory Log.i(String message, {dynamic error, StackTrace? stackTrace}) {
     autoInit();
     _self.i(message, error, stackTrace);
     return _self;
   }
 
   ///
-  factory Log.w(String message, {dynamic error, StackTrace stackTrace}) {
+  factory Log.w(String message, {dynamic error, StackTrace? stackTrace}) {
     autoInit();
     _self.w(message, error, stackTrace);
     return _self;
   }
 
   ///
-  factory Log.e(String message, {dynamic error, StackTrace stackTrace}) {
+  factory Log.e(String message, {dynamic error, StackTrace? stackTrace}) {
     autoInit();
     _self.e(message, error, stackTrace);
     return _self;
   }
 
   ///
-  static void autoInit() {
-    if (_self == null) {
-      init('.');
-    }
-  }
+  static void autoInit() {}
 
   ///
   static void init(String currentWorkingDirectory) {

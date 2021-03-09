@@ -48,7 +48,8 @@ class MediaFormatManager {
         return mediaFormat;
       }
     }
-    return null;
+
+    throw MediaFormatException('Unknown file extension $extension');
   }
 
   /// returns a list of the native encoders (recording) supported by the current platform.

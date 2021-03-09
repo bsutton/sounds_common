@@ -51,16 +51,12 @@ class LocalDate {
   /// If you passed in [time] then
   /// That time is set as the time component
   /// on the resulting DateTime.
-  /// If [time] is null then the time component
-  /// is set to midnight at the start of this
+  /// If [time] not passed it is set to midnight at the start of this
   /// [LocalDate].
-  DateTime toDateTime({LocalTime time}) {
-    if (time == null) {
-      return date;
-    } else {
-      return DateTime(
-          date.year, date.month, date.day, time.hour, time.minute, time.second);
-    }
+  DateTime toDateTime(
+      {LocalTime time = const LocalTime(hour: 24, minute: 0, second: 0)}) {
+    return DateTime(
+        date.year, date.month, date.day, time.hour, time.minute, time.second);
   }
 
   ///

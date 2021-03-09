@@ -27,7 +27,7 @@ import 'log.dart';
 /// Call the [delete] method to cleanup the temp file.
 class TempMediaFile {
   /// path to the temporary media file.
-  String path;
+  late final String path;
 
   bool _deleted = false;
 

@@ -14,8 +14,6 @@
  *   along with Sounds.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import 'package:meta/meta.dart';
-
 /// Callback function used by internal methods indicate the loading progress.
 /// The value of [progress] should be between [0.0 - 1.0].
 /// The [length] of the media in bytes that we are downloading.
@@ -24,6 +22,8 @@ import 'package:meta/meta.dart';
 /// If loading has not yet commenced its value MUST be 1.0.
 ///
 typedef LoadingProgress = void Function(PlaybackDisposition disposition);
+
+void noProgress(PlaybackDisposition disposition) {}
 
 /// Used to stream data about the position of the
 /// playback as playback proceeds.
@@ -77,7 +77,7 @@ class PlaybackDisposition {
         duration = Duration.zero;
 
   /// Creates a disposition in the [load] state.
-  PlaybackDisposition.loading({@required this.progress})
+  PlaybackDisposition.loading({required this.progress})
       : state = PlaybackDispositionState.loading,
         position = Duration.zero,
         duration = Duration.zero;
@@ -97,7 +97,7 @@ class PlaybackDisposition {
         duration = Duration.zero;
 
   /// Creates a disposition in the [recording] state.
-  PlaybackDisposition.recording({@required this.duration})
+  PlaybackDisposition.recording({required this.duration})
       : state = PlaybackDispositionState.recording,
         progress = 1.0,
         position = Duration.zero;

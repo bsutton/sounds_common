@@ -20,7 +20,8 @@ import 'format.dart';
 import 'local_date.dart';
 
 /// Provides a class which wraps a DateTime but just supplies
-/// the date component.
+/// the time component.
+/// The hour component uses a 24 hour clock.
 @immutable
 class LocalTime {
   ///
@@ -33,7 +34,7 @@ class LocalTime {
   final int second;
 
   ///
-  LocalTime({this.hour, this.minute, this.second = 0});
+  const LocalTime({required this.hour, required this.minute, this.second = 0});
 
   ///
   LocalTime.fromDateTime(DateTime dateTime)
@@ -68,9 +69,6 @@ class LocalTime {
 
   ///
   bool isAfter(LocalTime rhs) {
-    if (rhs == null) {
-      return true;
-    }
     return hour > rhs.hour ||
         (hour == rhs.hour && minute > rhs.minute) ||
         (hour == rhs.hour && minute == rhs.minute && second > rhs.second);
@@ -93,9 +91,6 @@ class LocalTime {
 
   ///
   bool isEqual(LocalTime rhs) {
-    if (rhs == null) {
-      return false;
-    }
     return hour == rhs.hour && minute == rhs.minute && second == rhs.second;
   }
 

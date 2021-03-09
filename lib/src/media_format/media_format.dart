@@ -1,5 +1,3 @@
-import 'package:meta/meta.dart';
-
 abstract class MediaFormat {
   /// The [name] of the [MediaFormat].
   /// The [name] MUST be of the form container/codec (not all lower case)
@@ -18,7 +16,7 @@ abstract class MediaFormat {
   final int bitRate;
 
   const MediaFormat.detail({
-    @required this.name,
+    required this.name,
     this.sampleRate = 16000,
     this.numChannels = 1,
     this.bitRate = 16000,
@@ -48,4 +46,24 @@ abstract class MediaFormat {
         numChannels == other.numChannels &&
         bitRate == other.bitRate);
   }
+
+  static var unknownMedia = const UnknownMedia();
+}
+
+class UnknownMedia extends MediaFormat {
+  const UnknownMedia() : super.detail(name: 'Unknown');
+
+  @override
+  String get extension => throw UnimplementedError();
+
+  @override
+  Future<Duration> getDuration(String path) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<bool> get isNativeDecoder => throw UnimplementedError();
+
+  @override
+  Future<bool> get isNativeEncoder => throw UnimplementedError();
 }

@@ -32,7 +32,7 @@ class Format {
   /// the duration as per the format.
   ///
   ///
-  static String duration(Duration duration, {bool showSuffix = true}) {
+  static String duration(Duration? duration, {bool showSuffix = true}) {
     if (duration == null) {
       return '';
     }
@@ -58,9 +58,6 @@ class Format {
   ///
   static String dateTime(DateTime date,
       [String pattern = 'yyyy/MM/dd h:ss a']) {
-    if (date == null) {
-      return '';
-    }
     return DateFormat(pattern).format(date);
   }
 
@@ -86,9 +83,6 @@ class Format {
   ///
   static String smartFormat(DateTime date,
       [String pattern = 'yyyy/MM/dd h:ss a']) {
-    if (date == null) {
-      return '';
-    }
     return DateFormat(pattern).format(date);
   }
 
@@ -325,16 +319,16 @@ class Format {
 ///
 class AMPMParts {
   ///
-  int hour;
+  late final int hour;
 
   ///
-  int minute;
+  late final int minute;
 
   ///
-  int second;
+  late final int second;
 
   ///
-  bool am;
+  late final bool am;
 
   ///
   AMPMParts.fromLocalTime(LocalTime time) {

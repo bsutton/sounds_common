@@ -11,7 +11,7 @@ class Downloader {
   /// Downloads the [url] to [saveToPath] emmiting progress
   /// updates as the download progresses.
   static Future<void> download(String url, String saveToPath,
-      {LoadingProgress progress}) async {
+      {LoadingProgress progress = noProgress}) async {
     // announce we are starting.
     Log.d('Started downloading: $url');
     var completer = Completer<void>();
@@ -36,7 +36,8 @@ class Downloader {
       var raf = await saveFile.open(mode: FileMode.append);
       await raf.truncate(0);
 
-      StreamSubscription<List<int>> subscription;
+      late StreamSubscription<List<int>> subscription;
+
       subscription = response.listen(
         (newBytes) async {
           /// if we don't pause we get overlapping calls from listen
@@ -57,14 +58,15 @@ class Downloader {
 
           Log.d('Download progress: %${percent * 100} ');
         },
+
         onDone: () async {
           /// down load is complete
           await raf.close();
           _showProgress(progress, PlaybackDisposition.loaded());
           Log.d('Completed downloading: $url');
-          unawaited(subscription.cancel());
           completer.complete();
         },
+
         // ignore: avoid_types_on_closure_parameters
         onError: (Object e, StackTrace st) async {
           // something went wrong.
@@ -82,8 +84,6 @@ class Downloader {
 
   static void _showProgress(
       LoadingProgress progress, PlaybackDisposition disposition) {
-    if (progress != null) {
-      progress(disposition);
-    }
+    progress(disposition);
   }
 }
