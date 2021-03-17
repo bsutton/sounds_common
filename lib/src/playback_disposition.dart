@@ -77,7 +77,7 @@ class PlaybackDisposition {
         duration = Duration.zero;
 
   /// Creates a disposition in the [load] state.
-  PlaybackDisposition.loading({@required this.progress})
+  PlaybackDisposition.loading({required this.progress})
       : state = PlaybackDispositionState.loading,
         position = Duration.zero,
         duration = Duration.zero;
@@ -97,7 +97,7 @@ class PlaybackDisposition {
         duration = Duration.zero;
 
   /// Creates a disposition in the [recording] state.
-  PlaybackDisposition.recording({@required this.duration})
+  PlaybackDisposition.recording({required this.duration})
       : state = PlaybackDispositionState.recording,
         progress = 1.0,
         position = Duration.zero;

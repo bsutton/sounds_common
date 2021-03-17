@@ -22,26 +22,26 @@ class Audio {
   TrackStorageType _storageType;
 
   ///
-  MediaFormat mediaFormat;
+  MediaFormat? mediaFormat;
 
   /// An Audio instance can be created as one of :
   ///  * url
   ///  * path
   ///  * data buffer.
   ///
-  String url;
+  String? url;
 
   ///
-  String path;
+  String? path;
 
   ///
-  Uint8List _dataBuffer;
+  Uint8List? _dataBuffer;
 
   /// During process of an audio file it may need to pass
   /// through multiple temporary files for processing.
   /// If that occurs this path points the final temporary file.
   /// [_storagePath] will have a value of [_onDisk] is true.
-  String _storagePath;
+  String? _storagePath;
 
   /// Indicates if the audio media is stored on disk
   bool _onDisk = false;
@@ -59,9 +59,9 @@ class Audio {
 
   /// returns the length of the audio in bytes
   int get length {
-    if (_onDisk) return File(_storagePath).lengthSync();
-    if (isBuffer) return _dataBuffer.length;
-    if (isFile) return File(path).lengthSync();
+    if (_onDisk) return File(_storagePath!).lengthSync();
+    if (isBuffer) return _dataBuffer!.length;
+    if (isFile) return File(path!).lengthSync();
 
     // if its a URL an asset and its not [_onDisk] then we don't
     // know its length.
@@ -75,38 +75,36 @@ class Audio {
   /// will return immediately.
   Future<Uint8List> get asBuffer async {
     if (isBuffer || _dataBuffer != null) {
-      return _dataBuffer;
+      return _dataBuffer!;
     }
 
     if (isFile) {
-      _dataBuffer = await FileUtil().readIntoBuffer(_storagePath);
+      _dataBuffer = await FileUtil().readIntoBuffer(_storagePath!);
     }
 
     if (isURL) {
-      TempMediaFile tempMediaFile;
+      TempMediaFile tempMediaFile = TempMediaFile.empty();
       try {
-        var tempMediaFile = TempMediaFile.empty();
-
-        await Downloader.download(url, tempMediaFile.path,
+        await Downloader.download(url!, tempMediaFile.path,
             progress: (disposition) {});
 
         _dataBuffer = await FileUtil().readIntoBuffer(tempMediaFile.path);
       } finally {
-        tempMediaFile?.delete();
+        tempMediaFile.delete();
       }
     }
-    return _dataBuffer;
+    return _dataBuffer!;
   }
 
   /// Returns the location of the audio media on disk.
   String get storagePath {
     assert(_onDisk);
-    return _storagePath;
+    return _storagePath!;
   }
 
   /// Caches the duration so that we don't have to calculate
   /// it each time [duration] is called.
-  Duration _duration;
+  Duration? _duration;
 
   /// Returns the duration of the audio managed by this instances
   ///
@@ -126,11 +124,11 @@ class Audio {
       _duration = Duration.zero;
 
       var storagePath = _storagePath;
-      if (_onDisk && FileUtil().fileLength(storagePath) > 0) {
-        _duration = await mediaFormat.getDuration(_storagePath);
+      if (_onDisk && FileUtil().fileLength(storagePath!) > 0 && mediaFormat != null) {
+        _duration = await mediaFormat!.getDuration(_storagePath!);
       }
     }
-    return _duration;
+    return _duration!;
   }
 
   //ignore: use_setters_to_change_properties
@@ -142,33 +140,30 @@ class Audio {
   }
 
   ///
-  Audio.fromFile(this.path, this.mediaFormat) {
-    _storageType = TrackStorageType.file;
-    _storagePath = path;
-    _onDisk = true;
-  }
+  Audio.fromFile(this.path, this.mediaFormat)
+      : _storageType = TrackStorageType.file,
+        _storagePath = path,
+        _duration = Duration.zero,
+        _dataBuffer = Uint8List(0),
+        _onDisk = true;
 
   /// Create an [Audio] based on a flutter asset.
   /// [path] to the asset. This is normally of the form
   /// asset/xxx.wav
-  Audio.fromAsset(this.path, this.mediaFormat) {
-    _storageType = TrackStorageType.asset;
-    _dataBuffer = null;
-    _onDisk = false;
-  }
+  Audio.fromAsset(this.path, this.mediaFormat)
+      : _storageType = TrackStorageType.asset,
+        _dataBuffer = null,
+        _onDisk = false;
 
   ///
-  Audio.fromURL(this.url, this.mediaFormat) {
-    _storageType = TrackStorageType.url;
-  }
+  Audio.fromURL(this.url, this.mediaFormat)
+      : _storageType = TrackStorageType.url;
 
   /// Throws [MediaFormatNotSupportedException] if the databuffer is
   /// encoded in a unsupported media format.
-  Audio.fromBuffer(this._dataBuffer, this.mediaFormat) {
-    ArgumentError.checkNotNull(mediaFormat, 'mediaFormat');
-    ArgumentError.checkNotNull(_dataBuffer, '_dataBuffer');
-    _storageType = TrackStorageType.buffer;
-  }
+  Audio.fromBuffer(Uint8List _dataBuffer, this.mediaFormat)
+      : _dataBuffer = _dataBuffer,
+        _storageType = TrackStorageType.buffer;
 
   /// returns true if the Audio's media is located in via
   /// a file Path.
@@ -187,7 +182,7 @@ class Audio {
 
   /// returns the databuffer if there is one.
   /// see [isBuffer] to check if the audio is in a data buffer.
-  Uint8List get buffer => _dataBuffer;
+  Uint8List? get buffer => _dataBuffer;
 
   /// Does any preparatory work required on a stream before it can be played.
   /// This includes converting databuffers to paths and
@@ -235,14 +230,14 @@ class Audio {
   Future<void> _downloadURL(LoadingProgress progress) async {
     var saveToFile = TempMediaFile.empty();
     _tempMediaFiles.add(saveToFile);
-    await Downloader.download(url, saveToFile.path, progress: progress);
+    await Downloader.download(url!, saveToFile.path, progress: progress);
     _storagePath = saveToFile.path;
     _onDisk = true;
   }
 
   Future<void> _loadAsset() async {
     Log.d('loadingAsset');
-    _dataBuffer = (await rootBundle.load(path)).buffer.asUint8List();
+    _dataBuffer = (await rootBundle.load(path!)).buffer.asUint8List();
   }
 
   /// Only writes the audio to disk if we have a databuffer and we haven't
@@ -250,9 +245,8 @@ class Audio {
   ///
   /// Returns the path where the current version of the audio is stored.
   void _writeBufferToDisk(LoadingProgress progress) {
-    assert(progress != null);
     if (!_onDisk && (isBuffer || isAsset)) {
-      var tempMediaFile = TempMediaFile.fromBuffer(_dataBuffer, progress);
+      var tempMediaFile = TempMediaFile.fromBuffer(_dataBuffer!, progress);
       _tempMediaFiles.add(tempMediaFile);
 
       /// update the path to the new file.
@@ -317,7 +311,7 @@ class Audio {
 
     if (isURL) desc += ' url: $url';
     if (isFile) desc += ' path: $path';
-    if (isBuffer) desc += ' buffer len: ${_dataBuffer.length}';
+    if (isBuffer) desc += ' buffer len: ${_dataBuffer!.length}';
     if (isAsset) desc += ' asset: $path';
 
     return desc;

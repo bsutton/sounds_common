@@ -42,7 +42,7 @@ class MediaFormatManager {
   ///
   /// Returns null if the extension is not supported by any
   /// registered extension.
-  MediaFormat getByExtension(String extension) {
+  MediaFormat? getByExtension(String extension) {
     for (var mediaFormat in _mediaFormats.values) {
       if (extension == mediaFormat.extension) {
         return mediaFormat;

@@ -9,23 +9,23 @@ class StackTraceImpl implements core.StackTrace {
   static final _stackTraceRegex = RegExp(r'#[0-9]+[\s]+(.+) \(([^\s]+)\)');
   final core.StackTrace _stackTrace;
 
-  final String _workingDirectory;
+  final String? _workingDirectory;
   final int _skipFrames;
 
-  List<Stackframe> _frames;
+  List<Stackframe>? _frames;
 
   /// You can suppress call frames from showing
   /// by specifing a non-zero value for [skipFrames]
   /// If the workingDirectory is provided we will output
   /// a full file path to the dart library.
-  StackTraceImpl({int skipFrames = 0, String workingDirectory})
+  StackTraceImpl({int skipFrames = 0, String? workingDirectory})
       : _stackTrace = core.StackTrace.current,
         _skipFrames = skipFrames + 1, // always skip ourselves.
         _workingDirectory = workingDirectory;
 
   ///
   StackTraceImpl.fromStackTrace(this._stackTrace,
-      {String workingDirectory, int skipFrames = 0})
+      {String? workingDirectory, int skipFrames = 0})
       : _skipFrames = skipFrames,
         _workingDirectory = workingDirectory {
     if (_stackTrace is StackTraceImpl) {
@@ -59,14 +59,14 @@ class StackTraceImpl implements core.StackTrace {
 
   @override
   String toString() {
-    return formatStackTrace();
+    return formatStackTrace() ?? '';
   }
 
   /// Outputs a formatted string of the current stack_trace_nj
   /// showing upto [methodCount] methods in the trace.
   /// [methodCount] defaults to 10.
 
-  String formatStackTrace(
+  String? formatStackTrace(
       {bool showPath = false, int methodCount = 10, int skipFrames = 0}) {
     var formatted = <String>[];
     var count = 0;
@@ -105,7 +105,7 @@ class StackTraceImpl implements core.StackTrace {
   ///
   List<Stackframe> get frames {
     _frames ??= _extractFrames();
-    return _frames;
+    return _frames!;
   }
 
   List<Stackframe> _extractFrames() {
@@ -127,9 +127,9 @@ class StackTraceImpl implements core.StackTrace {
       // file:///.../package/filename.dart:column:line
       // package:/package/.path./filename.dart:column:line
       var source = match.group(2);
-      var sourceParts = source.split(':');
+      var sourceParts = source?.split(':');
       ArgumentError.value(
-          sourceParts.length == 4,
+          sourceParts!.length == 4,
           'Stackframe source does not contain the expeted no of colons '
           "'$source'");
 
@@ -151,7 +151,7 @@ class StackTraceImpl implements core.StackTrace {
       // sourcePath = sourcePath.replaceFirst("<package_name>", "/lib");
 
       var frame = Stackframe(
-          File(sourcePath), int.parse(lineNo), int.parse(column), details);
+          File(sourcePath), int.parse(lineNo), int.parse(column), details!);
       stackFrames.add(frame);
     }
     return stackFrames;

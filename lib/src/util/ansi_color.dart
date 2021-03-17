@@ -67,7 +67,7 @@ class AnsiColor {
       {AnsiColor bgcolor = none}) {
     String output;
 
-    output = '${_fg(color.code)}${_bg(bgcolor?.code)}$text$_reset';
+    output = '${_fg(color.code)}${_bg(bgcolor.code)}$text$_reset';
     return output;
   }
 

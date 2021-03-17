@@ -54,7 +54,7 @@ class LocalDate {
   /// If [time] is null then the time component
   /// is set to midnight at the start of this
   /// [LocalDate].
-  DateTime toDateTime({LocalTime time}) {
+  DateTime toDateTime({LocalTime? time}) {
     if (time == null) {
       return date;
     } else {

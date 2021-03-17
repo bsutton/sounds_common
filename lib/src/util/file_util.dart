@@ -37,7 +37,7 @@ class FileUtil {
   /// The temp file name will be <uuid>.tmp
   /// unless you provide a [suffix] in which
   /// case the file name will be <uuid>.<suffix>
-  String tempFile({String suffix}) {
+  String tempFile({String? suffix}) {
     suffix ??= 'tmp';
 
     if (!suffix.startsWith('.')) {
@@ -74,7 +74,7 @@ class FileUtil {
 
   /// Truncates the file to zero bytes in length.
   void truncate(String path) {
-    RandomAccessFile raf;
+    RandomAccessFile? raf;
 
     try {
       var file = File(path);

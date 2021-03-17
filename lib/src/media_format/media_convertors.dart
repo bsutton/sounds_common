@@ -15,8 +15,9 @@ class MediaConvertors {
   static void register(MediaConvertor converter) {}
 
   /// Attempts to find a MediaConvertor that converts [from] to [to].
-  MediaConvertor getConverter({MediaFormat from, MediaFormat to}) {
-    MediaConvertor result;
+  MediaConvertor getConverter(
+      {required MediaFormat from, required MediaFormat to}) {
+    MediaConvertor? result;
 
     for (var convertor in _convertors) {
       if (convertor.from == from && convertor.to == to) {
@@ -27,8 +28,9 @@ class MediaConvertors {
 
     if (result == null) {
       throw MediaConversionNotSupportedException();
+    } else {
+      return result;
     }
-    return result;
   }
 
   List<MediaConvertor> get converters => _convertors;

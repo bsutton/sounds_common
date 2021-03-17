@@ -325,16 +325,16 @@ class Format {
 ///
 class AMPMParts {
   ///
-  int hour;
+  late int hour;
 
   ///
-  int minute;
+  late int minute;
 
   ///
-  int second;
+  late int second;
 
   ///
-  bool am;
+  late bool am;
 
   ///
   AMPMParts.fromLocalTime(LocalTime time) {

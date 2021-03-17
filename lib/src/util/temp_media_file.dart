@@ -47,16 +47,13 @@ class TempMediaFile {
 
   /// creates an empty temporary media file which can be written to.
   /// Call [delete] to cleanup the temporary file once you have done with it.
-  TempMediaFile.empty() {
-    path = fm.FileUtil().tempFile();
-  }
+  TempMediaFile.empty() : path = fm.FileUtil().tempFile();
 
   /// Writes [dataBuffer] to a temporary file
   /// and returns the path to that file.
   TempMediaFile.fromBuffer(
-      Uint8List dataBuffer, LoadingProgress loadingProgress) {
-    path = fm.FileUtil().tempFile();
-
+      Uint8List dataBuffer, LoadingProgress loadingProgress)
+      : path = fm.FileUtil().tempFile() {
     if (fm.FileUtil().exists(path)) {
       fm.FileUtil().delete(path);
     }

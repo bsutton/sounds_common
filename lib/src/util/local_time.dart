@@ -33,7 +33,7 @@ class LocalTime {
   final int second;
 
   ///
-  LocalTime({this.hour, this.minute, this.second = 0});
+  LocalTime({required this.hour, required this.minute, this.second = 0});
 
   ///
   LocalTime.fromDateTime(DateTime dateTime)

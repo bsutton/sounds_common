@@ -18,7 +18,7 @@ abstract class MediaFormat {
   final int bitRate;
 
   const MediaFormat.detail({
-    @required this.name,
+    required this.name,
     this.sampleRate = 16000,
     this.numChannels = 1,
     this.bitRate = 16000,

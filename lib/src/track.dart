@@ -16,37 +16,37 @@ typedef TrackAction = void Function(Track current);
 ///
 //
 class Track {
-  TrackStorageType _storageType;
+  late TrackStorageType _storageType;
 
   /// The title of this track
-  String title;
+  String? title;
 
   /// The name of the artist of this track
-  String artist;
+  String? artist;
 
   /// The album the track belongs.
-  String album;
+  String? album;
 
   /// The URL that points to the album art of the track
-  String albumArtUrl;
+  String? albumArtUrl;
 
   /// The asset that points to the album art of the track
-  String albumArtAsset;
+  String? albumArtAsset;
 
   /// The file that points to the album art of the track
-  String albumArtFile;
+  String? albumArtFile;
 
   ///
-  Audio _audio;
+  late Audio _audio;
 
   /// Returns the length of the audio in bytes.
   int get length => _audio.length;
 
-  MediaFormat get mediaFormat => _audio.mediaFormat;
+  MediaFormat? get mediaFormat => _audio.mediaFormat;
 
   @override
   String toString() {
-    return '${title ?? ""} ${artist ?? ""} audio: $_audio';
+    return '$title $artist audio: $_audio';
   }
 
   /// Creates a Track from a path to a file
@@ -55,11 +55,7 @@ class Track {
   /// Throws [MediaFormatException] if the passed [MediaFormat] is not supported
   /// or if you don't pass the [MediaFormat] and we are unable
   /// to determine the [MediaFormat] from the [path]s extension.
-  Track.fromFile(String path, {MediaFormat mediaFormat}) {
-    if (path == null) {
-      throw TrackPathException('The path MUST not be null.');
-    }
-
+  Track.fromFile(String path, {MediaFormat? mediaFormat}) {
     if (!fm.FileUtil().exists(path)) {
       throw TrackPathException('The given path $path does not exist.');
     }
@@ -73,23 +69,15 @@ class Track {
   }
 
   /// Loads a track from an asset
-  Track.fromAsset(String assetPath, {MediaFormat mediaFormat}) {
-    if (assetPath == null) {
-      throw TrackPathException('The assetPath MUST not be null.');
-    }
+  Track.fromAsset(String assetPath, {MediaFormat? mediaFormat}) {
     _storageType = TrackStorageType.asset;
     _audio = Audio.fromAsset(assetPath, mediaFormat);
   }
 
   /// Creates a track from a remote URL.
   /// HTTP and HTTPS are supported
-  Track.fromURL(String url, {MediaFormat mediaFormat}) {
-    if (url == null) {
-      throw TrackPathException('The url MUST not be null.');
-    }
-
+  Track.fromURL(String url, {MediaFormat? mediaFormat}) {
     _storageType = TrackStorageType.url;
-
     _audio = Audio.fromURL(url, mediaFormat);
   }
 
@@ -99,7 +87,7 @@ class Track {
   /// This is useful if you need to record into a track
   /// backed by a buffer.
   ///
-  Track.fromBuffer(Uint8List buffer, {@required MediaFormat mediaFormat}) {
+  Track.fromBuffer(Uint8List? buffer, {MediaFormat? mediaFormat}) {
     buffer ??= Uint8List(0);
 
     _storageType = TrackStorageType.buffer;
@@ -120,18 +108,18 @@ class Track {
 
   /// If the [Track] was created via [Track.fromURL]
   /// then this will be the passed url.
-  String get url => _audio.url;
+  String? get url => _audio.url;
 
   /// If the [Track] was created via [Track.fromFile]
   /// then this will be the passed path.
-  String get path => _audio.path;
+  String? get path => _audio.path;
 
   /// If the [Track] was created via [Track.fromBuffer]
   /// then this will return the buffer.
   /// This may not be the same buffer you passed in if
   /// we have had to transcode data or you recorded into
   /// the track.
-  Uint8List get buffer => _audio.buffer;
+  Uint8List? get buffer => _audio.buffer;
 
   /// Converts the audio into a buffer
   /// and returns that buffer.
@@ -144,8 +132,8 @@ class Track {
   /// If the [Track] is a url then the url.
   /// If the [Track] is a databuffer then its dart hashCode.
   String get identity {
-    if (isFile) return path;
-    if (isURL) return url;
+    if (isFile) return path!;
+    if (isURL) return url!;
 
     return '${_audio.buffer.hashCode}';
   }
@@ -219,7 +207,7 @@ String trackStoragePath(Track track) {
   } else {
     // this should no longer fire as we are now downloading the track
     assert(track.isURL);
-    return track.url;
+    return track.url!;
   }
 }
 
@@ -228,7 +216,7 @@ String trackStoragePath(Track track) {
 ///
 /// This may not be the same buffer you passed in if we had
 /// to re-encode the buffer or if you recorded into the track.
-Uint8List trackBuffer(Track track) => track._audio.buffer;
+Uint8List? trackBuffer(Track track) => track._audio.buffer;
 
 /// Exception throw in a file path passed to a Track isn't valid.
 class TrackPathException implements Exception {
