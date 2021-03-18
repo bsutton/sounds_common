@@ -29,7 +29,7 @@ class PlaybackDisposition {
   /// The current state of playback.
   final PlaybackDispositionState state;
 
-  /// When the state is [PlaybackDispositionState.loading], 
+  /// When the state is [PlaybackDispositionState.loading],
   /// [progress] indicates how far threw the loading we are.
   /// The valid range is [0.0 - 1.0].
   /// [progress] will have a value of 1.0 when in

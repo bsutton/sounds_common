@@ -1,3 +1,10 @@
+# 2.0.0
+working version of nnbd.
+First pass at migrating to nnbd
+Merge pull request #2 from jonmountjoy/fix_bug_in_app_suspension
+allow for null mediaformat
+Fix #22
+
 # 1.0.8
 Changed default logging level from debug to info
 pubspec updated with new version number
