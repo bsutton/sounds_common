@@ -51,7 +51,7 @@ class Audio {
   /// is ready to play. Used to stop unnecessary calls to [prepareStream].
   bool _prepared = false;
 
-  /// [true] if the audio is stored in the file system.
+  /// true if the audio is stored in the file system.
   /// This can be because it was passed as a path
   /// or because we had to force it to disk for code conversion
   /// or similar operations.
@@ -79,8 +79,6 @@ class Audio {
     _storageType = TrackStorageType.url;
   }
 
-  /// Throws [MediaFormatNotSupportedException] if the databuffer is
-  /// encoded in a unsupported media format.
   Audio.fromBuffer(this._dataBuffer, this.mediaFormat) {
     _storageType = TrackStorageType.buffer;
   }

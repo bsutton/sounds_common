@@ -4,7 +4,7 @@ abstract class MediaFormat {
   /// e.g.
   /// ogg/vorbis
   ///
-  /// The [name] is used to compare [MediaFormats]
+  /// The [name] is used to compare [MediaFormat]s
   ///
   /// For MediaFormats that don't have a container (e.g PCM) then
   /// the name should just be the codec
@@ -35,7 +35,7 @@ abstract class MediaFormat {
   /// true.
   Future<bool> get isNativeDecoder;
 
-  /// Only [MediaFormats] that natively supported encoding (recording) by the current platform should return
+  /// Only [MediaFormat]s that natively supported encoding (recording) by the current platform should return
   /// true.
   Future<bool> get isNativeEncoder;
 

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:completer_ex/completer_ex.dart';
 import 'package:pedantic/pedantic.dart';
 
 import '../playback_disposition.dart';
@@ -14,7 +15,7 @@ class Downloader {
       {LoadingProgress progress = noProgress}) async {
     // announce we are starting.
     Log.d('Started downloading: $url');
-    var completer = Completer<void>();
+    var completer = CompleterEx<void>();
     _showProgress(progress, PlaybackDisposition.preload());
 
     var client = HttpClient();

@@ -38,11 +38,13 @@ class MediaFormatManager {
   }
 
   /// Returns the [MediaFormat] for the given file name extension.
-  /// The extension should NOT contain a leading '.'.
+  /// The extension should NOT contain a leading '.' but
+  /// if it does we will strip it before comparing.
   ///
   /// Returns null if the extension is not supported by any
   /// registered extension.
   MediaFormat getByExtension(String extension) {
+    if (extension.startsWith('.')) extension = extension.substring(1);
     for (var mediaFormat in _mediaFormats.values) {
       if (extension == mediaFormat.extension) {
         return mediaFormat;

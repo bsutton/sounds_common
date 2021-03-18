@@ -8,7 +8,7 @@ import 'enum_helper.dart';
 /// Logging class
 class Log extends Logger {
   static late Log _self = Log._internal('.');
-  static late final String _localPath;
+  static late String _localPath;
 
   /// The default log level.
   static Level loggingLevel = Level.info;
@@ -97,15 +97,15 @@ class Log extends Logger {
   }
 
   ///
-  static void autoInit() {}
+  static void autoInit() => init('.');
 
   ///
   static void init(String currentWorkingDirectory) {
     _self = Log._internal(currentWorkingDirectory);
 
-    var frames = StackTraceImpl();
+    var stack = StackTraceImpl();
 
-    for (var frame in frames.frames) {
+    for (var frame in stack.frames) {
       _localPath = frame.sourceFile.path
           .substring(frame.sourceFile.path.lastIndexOf('/'));
       break;

@@ -96,7 +96,7 @@ class Track {
   ///
   /// Throws [MediaFormatException] if the passed [MediaFormat] is not supported
   /// or if you don't pass the [MediaFormat] and we are unable
-  /// to determine the [MediaFormat] from the [assetPath]'s extension.
+  /// to determine the [MediaFormat] from the [url]'s extension.
   Track.fromURL(String url, {MediaFormat mediaFormat = const UnknownMedia()}) {
     _storageType = TrackStorageType.url;
 
@@ -209,7 +209,7 @@ class Track {
     return fm.FileUtil().tempFile(suffix: mediaFormat.extension);
   }
 
-  /// Used by [Album] to indicate that the first/last track of the Album
+  /// Used by Album to indicate that the first/last track of the Album
   /// has been reached.
   static Track end = Track.fromURL('http://end.mp3');
 }
@@ -242,7 +242,7 @@ String trackStoragePath(Track track) {
 }
 
 /// Returns the databuffer which holds the audio.
-/// If this Track was created via [fromBuffer].
+/// If this Track was created via [Track.fromBuffer].
 ///
 /// This may not be the same buffer you passed in if we had
 /// to re-encode the buffer or if you recorded into the track.
